@@ -1,0 +1,231 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro'
+import { getFeaturedProducts, getCategories } from '../lib/payload'
+
+const featuredProducts = await getFeaturedProducts()
+const categories = await getCategories()
+---
+
+<Layout title="CHADOR - Modest Fashion">
+	<!-- Hero Video Section - exact zoals Chador.nl -->
+	<section class="relative h-screen flex items-center justify-center overflow-hidden bg-neutral-100">
+		<!-- Background Image (placeholder voor video) -->
+		<div class="absolute inset-0">
+			<img
+				src="https://images.unsplash.com/photo-1594736797933-d0411e58a4c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+				alt="Modest Fashion Collection"
+				class="w-full h-full object-cover opacity-90"
+			/>
+			<div class="absolute inset-0 bg-black bg-opacity-20"></div>
+		</div>
+
+		<!-- Hero Content -->
+		<div class="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
+			<h1 class="text-5xl md:text-7xl font-light tracking-wider font-playfair mb-6">
+				MODEST
+			</h1>
+			<h2 class="text-3xl md:text-5xl font-light tracking-wider font-playfair mb-8">
+				ESSENTIALS
+			</h2>
+			<p class="text-lg md:text-xl font-light tracking-wide mb-12 max-w-2xl mx-auto">
+				Discover our exclusive collection of modest fashion
+			</p>
+			<a
+				href="/shop"
+				class="inline-block bg-white text-neutral-900 px-8 py-3 text-sm font-medium tracking-wider uppercase hover:bg-neutral-100 transition-colors"
+			>
+				Shop Now
+			</a>
+		</div>
+	</section>
+
+	<!-- Categories Section - Chador.nl style -->
+	<section class="py-20 bg-white">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-16">
+				<h2 class="text-3xl md:text-4xl font-light tracking-wider font-playfair text-neutral-900 mb-4">
+					Categories
+				</h2>
+				<p class="text-neutral-600 max-w-2xl mx-auto font-light">
+					Explore our carefully curated collections designed for the modern woman
+				</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<!-- Category 1 -->
+				<div class="group cursor-pointer">
+					<div class="relative overflow-hidden bg-neutral-100 aspect-[3/4] mb-4">
+						<img
+							src="https://images.unsplash.com/photo-1594736797933-d0411e58a4c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+							alt="Dresses"
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						/>
+					</div>
+					<h3 class="text-xl font-light tracking-wide text-center text-neutral-900 uppercase">
+						Dresses
+					</h3>
+				</div>
+
+				<!-- Category 2 -->
+				<div class="group cursor-pointer">
+					<div class="relative overflow-hidden bg-neutral-100 aspect-[3/4] mb-4">
+						<img
+							src="https://images.unsplash.com/photo-1583391733956-6c78339ee5c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+							alt="Scarves"
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						/>
+					</div>
+					<h3 class="text-xl font-light tracking-wide text-center text-neutral-900 uppercase">
+						Scarves
+					</h3>
+				</div>
+
+				<!-- Category 3 -->
+				<div class="group cursor-pointer">
+					<div class="relative overflow-hidden bg-neutral-100 aspect-[3/4] mb-4">
+						<img
+							src="https://images.unsplash.com/photo-1594736797933-d0411e58a4c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+							alt="New Arrivals"
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						/>
+					</div>
+					<h3 class="text-xl font-light tracking-wide text-center text-neutral-900 uppercase">
+						New Arrivals
+					</h3>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Featured Products - exact Chador.nl style -->
+	{featuredProducts.length > 0 && (
+		<section class="py-20 bg-neutral-50">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="text-center mb-16">
+					<h2 class="text-3xl md:text-4xl font-light tracking-wider font-playfair text-neutral-900 mb-4">
+						Featured
+					</h2>
+					<p class="text-neutral-600 max-w-2xl mx-auto font-light">
+						Our most loved pieces, carefully selected for you
+					</p>
+				</div>
+
+				<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+					{featuredProducts.slice(0, 4).map((product) => (
+						<div class="group">
+							<a href={`/product/${product.slug}`} class="block">
+								<div class="relative overflow-hidden bg-neutral-100 aspect-[3/4] mb-4">
+									<img
+										src={product.images[0]?.image?.url || 'https://images.unsplash.com/photo-1594736797933-d0411e58a4c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
+										alt={product.images[0]?.alt || product.name}
+										class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+									/>
+									{product.salePrice && (
+										<div class="absolute top-4 left-4 bg-red-600 text-white px-2 py-1 text-xs uppercase tracking-wide">
+											Sale
+										</div>
+									)}
+								</div>
+								<div class="text-center">
+									<h3 class="text-sm font-light text-neutral-900 mb-2 tracking-wide">
+										{product.name}
+									</h3>
+									<div class="flex items-center justify-center space-x-2">
+										{product.salePrice ? (
+											<>
+												<span class="text-sm font-light text-red-600">€{product.salePrice}</span>
+												<span class="text-sm text-neutral-500 line-through">€{product.price}</span>
+											</>
+										) : (
+											<span class="text-sm font-light text-neutral-900">€{product.price}</span>
+										)}
+									</div>
+								</div>
+							</a>
+						</div>
+					))}
+				</div>
+
+				<div class="text-center mt-12">
+					<a
+						href="/shop"
+						class="inline-block border border-neutral-900 text-neutral-900 px-8 py-3 text-sm font-light tracking-wider uppercase hover:bg-neutral-900 hover:text-white transition-colors"
+					>
+						View All
+					</a>
+				</div>
+			</div>
+		</section>
+	)}
+
+	<!-- Newsletter Section - exact Chador.nl style -->
+	<section class="py-20 bg-white">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+			<h2 class="text-3xl md:text-4xl font-light tracking-wider font-playfair text-neutral-900 mb-4">
+				Stay Connected
+			</h2>
+			<p class="text-neutral-600 mb-8 font-light">
+				Join our mailinglist and receive 10% off your first order
+			</p>
+
+			<form class="max-w-md mx-auto">
+				<div class="flex">
+					<input
+						type="email"
+						placeholder="Enter your email address"
+						class="flex-1 border border-neutral-300 px-4 py-3 text-sm focus:outline-none focus:border-neutral-900 bg-white"
+						required
+					/>
+					<button
+						type="submit"
+						class="bg-neutral-900 text-white px-6 py-3 text-sm font-light tracking-wider uppercase hover:bg-neutral-800 transition-colors"
+					>
+						Subscribe
+					</button>
+				</div>
+			</form>
+
+			<p class="text-xs text-neutral-500 mt-4">
+				By signing up you agree to our Terms and Conditions
+			</p>
+		</div>
+	</section>
+
+	<!-- Features Section - zoals Chador.nl -->
+	<section class="py-16 bg-neutral-50 border-t border-neutral-200">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+				<div>
+					<div class="mb-4">
+						<svg class="h-8 w-8 mx-auto text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+						</svg>
+					</div>
+					<h3 class="text-sm font-medium text-neutral-900 mb-2 uppercase tracking-wide">Free Shipping</h3>
+					<p class="text-xs text-neutral-600">Free shipping on orders over €99</p>
+				</div>
+
+				<div>
+					<div class="mb-4">
+						<svg class="h-8 w-8 mx-auto text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+						</svg>
+					</div>
+					<h3 class="text-sm font-medium text-neutral-900 mb-2 uppercase tracking-wide">30 Day Returns</h3>
+					<p class="text-xs text-neutral-600">Easy returns within 30 days</p>
+				</div>
+
+				<div>
+					<div class="mb-4">
+						<svg class="h-8 w-8 mx-auto text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+						</svg>
+					</div>
+					<h3 class="text-sm font-medium text-neutral-900 mb-2 uppercase tracking-wide">Secure Payment</h3>
+					<p class="text-xs text-neutral-600">Your payment information is safe</p>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
